@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#7fff"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="#f00" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_unpair_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:text="name"
+                android:textColor="#333"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_unpair_name2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="name"
+                android:textColor="#333"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_unpair_mac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="name"
+                android:textColor="#333"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_unpair_ri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="name"
+                android:textColor="#333"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tv_unpair_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="name"
+            android:textColor="#333"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+
+    <CheckBox
+        android:id="@+id/btn_add_device"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false" />
+
+
+</LinearLayout>
