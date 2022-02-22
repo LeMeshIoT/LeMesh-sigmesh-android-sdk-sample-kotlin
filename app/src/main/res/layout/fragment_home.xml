@@ -43,5 +43,13 @@
         android:layout_marginTop="4dp"
         android:text="设置灯光渐变时间" />
 
+    <Button
+        android:id="@+id/btn_config_scene_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="设置情景渐变时间"
+        android:visibility="gone" />
+
 
 </LinearLayout>

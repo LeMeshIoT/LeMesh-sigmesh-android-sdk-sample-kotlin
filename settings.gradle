@@ -15,8 +15,11 @@ dependencyResolutionManagement {
         jcenter() // Warning: this repository is going to shut down soon
 
         maven {
-            allowInsecureProtocol = true
-            url 'http://lesdk.lelight.top:9001/repository/maven-releases/'
+            credentials {
+                username '6209c6b69d2642b5b4aa832c'
+                password 'jiC0CMKCR1y7'
+            }
+            url 'https://packages.aliyun.com/maven/repository/2045728-release-6bf65s'
         }
     }
 }

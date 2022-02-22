@@ -1,7 +1,6 @@
 package cn.lelight.iot.sigmesh.demo
 
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -15,27 +14,20 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import cn.lelight.iot.sigmesh.demo.databinding.ActivityMainBinding
-import cn.lelight.leiot.data.config.SigConfigInfo
 import cn.lelight.leiot.sdk.LeHomeSdk
-import cn.lelight.leiot.sdk.api.callback.sigmesh.LeSigMeshStatusChangeCallback
 import cn.lelight.leiot.sdk.core.InitCallback
-import cn.lelight.leiot.sdk.utils.MD5Util
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
-class MainActivity : AppCompatActivity(), LeSigMeshStatusChangeCallback {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
     lateinit var navController: NavController
 
-    private val appid = "appid"
-    private val mac = "mac"
-    private val secret = "secret"
-
-    //
-    private val proAddress = 0x6000
-    private val seqNumber = 0
+    private val appid = "ap0123456789"
+    private val mac = "18146c9673f2"
+    private val secret = "ap012345678901234567890123456789"
 
     private val _isInit = MutableLiveData<Boolean>().apply {
         value = false
@@ -43,9 +35,6 @@ class MainActivity : AppCompatActivity(), LeSigMeshStatusChangeCallback {
     val isInit: LiveData<Boolean> = _isInit
 
     //
-    var log1 = "sdk 未初始化"
-    var log2 = "未连接"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -81,7 +70,7 @@ class MainActivity : AppCompatActivity(), LeSigMeshStatusChangeCallback {
             //
             var msg = when (result) {
                 InitCallback.SUCCESS -> {
-                    startInitSigMesh(application.applicationContext)
+                    SigDemoInstance.get().init(application.applicationContext)
                     _isInit.value = true
                     "sdk 初始化成功"
                 }
@@ -104,42 +93,5 @@ class MainActivity : AppCompatActivity(), LeSigMeshStatusChangeCallback {
         }
     }
 
-    private fun startInitSigMesh(context: Context) {
-        // todo 自行检查是否开启蓝牙
-        val bleSigMeshManger = LeHomeSdk.getBleSigMeshManger()
-        // todo 自行确定netkey 和 appkey 等信息
-        bleSigMeshManger.initPlugin(
-            context,
-            SigConfigInfo(
-                MD5Util.getMD5("netkey"),
-                MD5Util.getMD5("appkey"),
-                proAddress,
-                seqNumber
-            )
-        ) {
-            Log.e("MainActivity", "sig sdk init result $it")
-            //
-            log1 =
-                "初始化完成:\nSigSdkVer:${bleSigMeshManger.version}\nnetkey:${bleSigMeshManger.netKey}\nappkey:${bleSigMeshManger.appKey}\n地址:0x${
-                    String.format(
-                        "%04x",
-                        proAddress
-                    )
-                }"
-            // 设置监听
-            bleSigMeshManger.setStatusChangeListener(this)
-        }
-    }
 
-    override fun onConnectStatusChange(mac: String?, isConnect: Boolean) {
-        Log.e("TEST", "onConnectStatusChange $mac $isConnect")
-
-        var msg = if (isConnect) {
-            "已连接"
-        } else {
-            "已断开"
-        }
-
-        log2 = "$mac $msg"
-    }
 }

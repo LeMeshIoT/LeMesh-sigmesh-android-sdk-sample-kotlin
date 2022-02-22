@@ -50,9 +50,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     //
     // sdk组件
-    implementation 'cn.lelight.leiot.sdk:smart:0.0.4'
+    implementation 'cn.lelight.leiot.sdk:smart:0.0.5'
     // blesigmesh模块(可选)
-    implementation 'cn.lelight.leiot.sdk:blesigmesh:0.0.4'
+    implementation 'cn.lelight.leiot.sdk:blesigmesh:0.0.5'
     //
     // dialog
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'

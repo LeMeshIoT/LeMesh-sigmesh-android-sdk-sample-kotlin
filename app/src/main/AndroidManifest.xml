@@ -17,8 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SigMeshDemo">
         <activity
-            android:name=".ui.devicelist.DeviceListActivity"
+            android:name=".CommonDeviceActivity"
             android:exported="false" />
+
         <activity
             android:name=".ui.adddevice.AddDevicesActivity"
             android:exported="false"
