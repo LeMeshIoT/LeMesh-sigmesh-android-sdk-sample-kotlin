@@ -25,9 +25,9 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var navController: NavController
 
-    private val appid = "ap0123456789"
-    private val mac = "18146c9673f2"
-    private val secret = "ap012345678901234567890123456789"
+    private val appid = "appid"
+    private val mac = "mac"
+    private val secret = "secret"
 
     private val _isInit = MutableLiveData<Boolean>().apply {
         value = false
