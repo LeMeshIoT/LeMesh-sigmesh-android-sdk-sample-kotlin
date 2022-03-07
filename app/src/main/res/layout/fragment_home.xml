@@ -48,8 +48,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="设置情景渐变时间"
-        android:visibility="gone" />
+        android:text="设置情景渐变时间" />
+
+    <Button
+        android:id="@+id/btn_config_seq"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="设置SEQ" />
+
+    <Button
+        android:id="@+id/btn_config_reset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="重置网络" />
 
 
 </LinearLayout>

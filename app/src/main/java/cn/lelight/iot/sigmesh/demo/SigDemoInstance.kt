@@ -28,10 +28,15 @@ class SigDemoInstance private constructor() : LeSigMeshStatusChangeCallback {
         value = "未连接"
     }
 
+    val isInit = MutableLiveData<Boolean>().apply {
+        value = false
+    }
+
     private val proAddress = 0x6000
     private val seqNumber = 0
 
     fun init(context: Context) {
+        Log.e("SigDemoInstance", "init")
         // todo 自行检查是否开启蓝牙
         val bleSigMeshManger = LeHomeSdk.getBleSigMeshManger()
         // todo 自行确定netkey 和 appkey 等信息
@@ -44,7 +49,7 @@ class SigDemoInstance private constructor() : LeSigMeshStatusChangeCallback {
                 seqNumber
             )
         ) {
-            Log.e("MainActivity", "sig sdk init result $it")
+            Log.e("SigDemoInstance", "sig sdk init result $it")
             // 设置监听
             bleSigMeshManger.setStatusChangeListener(this)
         }

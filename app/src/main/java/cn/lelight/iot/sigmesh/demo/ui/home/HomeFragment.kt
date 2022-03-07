@@ -7,10 +7,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cn.lelight.iot.sigmesh.demo.MainActivity
 import cn.lelight.iot.sigmesh.demo.SigDemoInstance
 import cn.lelight.iot.sigmesh.demo.databinding.FragmentHomeBinding
 import cn.lelight.iot.sigmesh.demo.ui.adddevice.AddDevicesActivity
@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        SigDemoInstance.get().sigConnectStatus.observe(viewLifecycleOwner){
+        SigDemoInstance.get().sigConnectStatus.observe(viewLifecycleOwner) {
             binding.textHome2.text = it
             materialDialog?.dismiss()
         }
@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
                         input.toString().toInt(),
                         object : IResultCallback {
                             override fun success() {
-                                Toast.makeText(requireContext(), "设置成功", Toast.LENGTH_SHORT).show()
+                                toast("设置成功")
                             }
 
                             override fun fail(p0: Int, p1: String?) {
@@ -75,6 +75,11 @@ class HomeFragment : Fragment() {
 
         binding.btnAddDevice.setOnClickListener {
             // 添加设备
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
+            // 判断下
             requireActivity().startActivity(
                 Intent(
                     requireActivity(),
@@ -84,6 +89,11 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnStartConnect.setOnClickListener {
+            //
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
             //
             materialDialog = MaterialDialog.Builder(requireActivity())
                 .title("正在搜索设备")
@@ -96,28 +106,44 @@ class HomeFragment : Fragment() {
                 true,
                 object : IBleScanUnProCallback {
                     override fun scanDeviceNotify(p0: HashMap<String, ExtendedBluetoothDevice>?) {
-
+                        Log.e("test", "scanDeviceNotify${p0}")
                     }
 
                     override fun scanTimeOutResult(deviceHashMap: HashMap<String, ExtendedBluetoothDevice>) {
+                        Log.e("test", "scanTimeOutResult${deviceHashMap}")
                         // todo 找信号最强的连接
                         for (value in deviceHashMap.values) {
-                            LeHomeSdk.getBleSigMeshManger().startConnectProxyNode(value)
+                            LeHomeSdk.getBleSigMeshManger()
+                                .startConnectProxyNode(value, object : IResultCallback {
+                                    override fun success() {
+                                    }
+
+                                    override fun fail(p0: Int, p1: String?) {
+                                        materialDialog?.dismiss()
+                                        Log.e("test", "" + p1)
+                                    }
+
+                                })
                             break
                         }
                     }
 
                     override fun scanFail(p0: String?) {
-                        // todo
+                        Log.e("test", "scanFail $p0")
                     }
 
                 })
         }
 
         binding.btnConfigTime.setOnClickListener {
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
+            //
             val callback = object : IResultCallback {
                 override fun success() {
-                    Toast.makeText(requireContext(), "设置成功", Toast.LENGTH_SHORT).show()
+                    toast("设置成功")
                 }
 
                 override fun fail(p0: Int, p1: String?) {
@@ -154,9 +180,15 @@ class HomeFragment : Fragment() {
                 }.show()
         }
         binding.btnConfigSceneTime.setOnClickListener {
+            //
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
+            //
             val callback = object : IResultCallback {
                 override fun success() {
-                    Toast.makeText(requireContext(), "设置成功", Toast.LENGTH_SHORT).show()
+                    toast("设置成功")
                 }
 
                 override fun fail(p0: Int, p1: String?) {
@@ -193,7 +225,80 @@ class HomeFragment : Fragment() {
                 }.show()
         }
 
+        binding.btnConfigSeq.setOnClickListener {
+            //
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
+            //
+            val callback = object : IResultCallback {
+                override fun success() {
+                    toast("设置成功")
+                }
+
+                override fun fail(p0: Int, p1: String?) {
+                    // todo
+                }
+            }
+
+            val config = LeHomeSdk.getBleSigMeshManger().getConfig(
+                SigConfig.PRO_SEQ
+            )
+
+            MaterialDialog.Builder(requireActivity())
+                .title("设置SEQ(当前:$config)")
+                .content("设置消息指令的seq值,若seq值低于设备中缓存的,将无法控制设备\n(0~16777216)")
+                .input("", "", false) { _, input ->
+                    LeHomeSdk.getBleSigMeshManger().config(
+                        SigConfig.PRO_SEQ, input.toString().toInt(),
+                        callback
+                    )
+                }
+                .inputType(InputType.TYPE_CLASS_NUMBER)
+                .show()
+        }
+
+        binding.btnConfigReset.setOnClickListener {
+            //
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
+            //
+            val callback = object : IResultCallback {
+                override fun success() {
+                    toast("设置成功")
+                }
+
+                override fun fail(p0: Int, p1: String?) {
+                    // todo
+                }
+            }
+            MaterialDialog.Builder(requireActivity())
+                .title("确定")
+                .content("将删除所有节点(仅删除缓存数据)，设备需要重置添加")
+                .onPositive { dialog, which ->
+                    LeHomeSdk.getBleSigMeshManger().resetNetWork(callback)
+                }
+                .positiveText("确定")
+                .negativeText("取消")
+                .inputType(InputType.TYPE_CLASS_NUMBER)
+                .show()
+        }
+
         return root
+    }
+
+    private fun checkIsInitSdk(): Boolean {
+        if (requireActivity() is MainActivity) {
+            return SigDemoInstance.get().isInit.value!!
+        }
+        return false
+    }
+
+    fun toast(msg: String) {
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
 
 

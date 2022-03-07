@@ -3,6 +3,7 @@ package cn.lelight.iot.sigmesh.demo.ui.devices
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import cn.lelight.iot.sigmesh.demo.MainActivity
 import cn.lelight.iot.sigmesh.demo.R
+import cn.lelight.iot.sigmesh.demo.SigDemoInstance
 import cn.lelight.iot.sigmesh.demo.databinding.FragmentDashboardBinding
 import cn.lelight.leiot.data.LeDataCenter
 import cn.lelight.leiot.data.bean.AllRoomBean
@@ -35,6 +37,8 @@ import com.google.android.material.tabs.TabLayout
 
 class DevicesFragment : Fragment() {
 
+    private val TAG = "DevicesFragment"
+
     private var _binding: FragmentDashboardBinding? = null
 
     private var allRoomBeans = ArrayList<RoomBean>()
@@ -58,13 +62,15 @@ class DevicesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.i(TAG, "onCreateView")
+
         val dashboardViewModel =
             ViewModelProvider(this).get(DevicesViewModel::class.java)
 
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        (requireActivity() as MainActivity).isInit.observeForever {
+        SigDemoInstance.get().isInit.observe(viewLifecycleOwner) {
             if (it) {
                 // 初始化成功
                 dataManger = LeHomeSdk.getDataManger()
@@ -249,6 +255,7 @@ class DevicesFragment : Fragment() {
     }
 
     private fun initListener() {
+        Log.i(TAG, "initListener")
         // 监听blemesh
         LeHomeSdk.getInstance().setHomeDataChangeListener(object : IHomeDataChangeListener {
             override fun onDeviceAdd(deviceBean: DeviceBean) {
@@ -293,6 +300,10 @@ class DevicesFragment : Fragment() {
     }
 
     private fun deviceUpdateUI() {
+        Log.i(TAG, "deviceUpdateUI")
+        if (_binding == null) {
+            return
+        }
         if (targetGroupId != -1) {
             val groupBean = LeDataCenter.getInstance().groupBeanHashMap[targetGroupId]
             groupBean?.let { initGroupData(it) }

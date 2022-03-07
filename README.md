@@ -3,7 +3,7 @@
 #### 输入授权信息 
 
 ```
-// MainActivity
+// MyApplication
 // 输入对应信息,否则初始化的时候会报 "非法授权sdk"
 private val appid = "appid"
 private val mac = "mac"

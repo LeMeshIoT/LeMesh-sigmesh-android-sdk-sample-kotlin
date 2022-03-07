@@ -25,14 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var navController: NavController
 
-    private val appid = "appid"
-    private val mac = "mac"
-    private val secret = "secret"
 
-    private val _isInit = MutableLiveData<Boolean>().apply {
-        value = false
-    }
-    val isInit: LiveData<Boolean> = _isInit
 
     //
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,46 +45,14 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        initSdk(application)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         return true
     }
 
-    fun initSdk(application: Application) {
-        LeHomeSdk.init(
-            application,
-            appid,
-            mac,
-            secret
-        ) { result ->
-            Log.e("MainActivity", "sdk init result $result")
-            //
-            var msg = when (result) {
-                InitCallback.SUCCESS -> {
-                    SigDemoInstance.get().init(application.applicationContext)
-                    _isInit.value = true
-                    "sdk 初始化成功"
-                }
-                InitCallback.ALREADY_INITIALED -> {
-                    "sdk已经初始化过了"
-                }
-                InitCallback.UNAUTH_SDK -> {
-                    "非法授权sdk"
-                }
-                InitCallback.AUTH_FAID -> {
-                    // 检查是否设备有网络
-                    "授权失败"
-                }
-                else -> {
-                    "其它异常"
-                }
-            }
-            Toast.makeText(application.applicationContext, msg, Toast.LENGTH_SHORT)
-                .show()
-        }
-    }
+
 
 
 }

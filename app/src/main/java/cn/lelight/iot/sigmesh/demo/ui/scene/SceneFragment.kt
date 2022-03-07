@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import cn.lelight.iot.sigmesh.demo.MainActivity
 import cn.lelight.iot.sigmesh.demo.R
+import cn.lelight.iot.sigmesh.demo.SigDemoInstance
 import cn.lelight.iot.sigmesh.demo.databinding.FragmentNotificationsBinding
 import cn.lelight.leiot.data.bean.SceneBean
 import cn.lelight.leiot.data.leenum.ModuleType
@@ -44,10 +45,19 @@ class SceneFragment : Fragment() {
         val root: View = binding.root
 
         binding.btnQueryScene2.setOnClickListener {
+            if (SigDemoInstance.get().isInit.value!!){
+                return@setOnClickListener
+            }
+
             sigSceneManger?.queryDevicesScenes()
         }
 
         binding.btnAddScene.setOnClickListener {
+
+            if (SigDemoInstance.get().isInit.value!!){
+                return@setOnClickListener
+            }
+
             MaterialDialog.Builder(requireActivity())
                 .title("添加情景(demo)")
                 .content("请提前在设备将设备控制成想要的状态")
@@ -72,7 +82,7 @@ class SceneFragment : Fragment() {
                 }.show()
         }
 
-        (requireActivity() as MainActivity).isInit.observeForever {
+        SigDemoInstance.get().isInit.observeForever {
             if (it) {
                 // 初始化成功
                 dataManger = LeHomeSdk.getDataManger()
