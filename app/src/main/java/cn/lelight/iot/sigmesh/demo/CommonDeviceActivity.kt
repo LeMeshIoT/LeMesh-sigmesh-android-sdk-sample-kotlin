@@ -50,7 +50,7 @@ class CommonDeviceActivity : AppCompatActivity() {
         }
         //
         if (supportActionBar != null) {
-            supportActionBar!!.title = targetBean!!.mac
+            supportActionBar!!.title = "[${targetBean!!.mac}][${targetBean!!.pid}]"
             supportActionBar!!.setDisplayShowHomeEnabled(true)
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         }

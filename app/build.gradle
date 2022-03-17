@@ -32,6 +32,16 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    buildTypes.each {
+        it.buildConfigField("String", "BUILDTIME", "\"[Build] ${buildVerTime()}\"")
+    }
+}
+
+static def buildVerTime() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd#HHmm')
+    return formattedDate
 }
 
 dependencies {
@@ -50,9 +60,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     //
     // sdk组件
-    implementation 'cn.lelight.leiot.sdk:smart:0.0.6'
+    implementation 'cn.lelight.leiot.sdk:smart:0.0.7'
     // blesigmesh模块(可选)
-    implementation 'cn.lelight.leiot.sdk:blesigmesh:0.0.6'
+    implementation 'cn.lelight.leiot.sdk:blesigmesh:0.0.7'
     // 版本0.0.6及以上第三方库需要外部单独调用
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

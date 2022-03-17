@@ -45,7 +45,7 @@ class SceneFragment : Fragment() {
         val root: View = binding.root
 
         binding.btnQueryScene2.setOnClickListener {
-            if (SigDemoInstance.get().isInit.value!!){
+            if (!SigDemoInstance.get().isInit.value!!){
                 return@setOnClickListener
             }
 
@@ -54,7 +54,7 @@ class SceneFragment : Fragment() {
 
         binding.btnAddScene.setOnClickListener {
 
-            if (SigDemoInstance.get().isInit.value!!){
+            if (!SigDemoInstance.get().isInit.value!!){
                 return@setOnClickListener
             }
 
@@ -73,6 +73,7 @@ class SceneFragment : Fragment() {
                         object : IResultCallback {
                             override fun success() {
                                 // 这里代表发送完成，是否添加成功，看回调
+
                             }
 
                             override fun fail(code: Int, msg: String) {

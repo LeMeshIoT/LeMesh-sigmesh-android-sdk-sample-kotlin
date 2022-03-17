@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cn.lelight.iot.sigmesh.demo.BuildConfig
 import cn.lelight.iot.sigmesh.demo.MainActivity
 import cn.lelight.iot.sigmesh.demo.SigDemoInstance
 import cn.lelight.iot.sigmesh.demo.databinding.FragmentHomeBinding
@@ -47,6 +48,9 @@ class HomeFragment : Fragment() {
             binding.textHome2.text = it
             materialDialog?.dismiss()
         }
+
+        binding.textHome.text =
+            "ver:${LeHomeSdk.getBleSigMeshManger().version}\n${BuildConfig.BUILDTIME}"
 
         binding.btnConfigTtl.setOnClickListener {
             MaterialDialog.Builder(requireActivity())
@@ -101,35 +105,17 @@ class HomeFragment : Fragment() {
                 .progress(true, 0)
                 .show()
             //
-            LeHomeSdk.getBleManger().bleScanManger.startScanProSigBleInfo(
+            LeHomeSdk.getBleSigMeshManger().autoConnectProxyNode(
                 3, // 搜索3秒
-                true,
-                object : IBleScanUnProCallback {
-                    override fun scanDeviceNotify(p0: HashMap<String, ExtendedBluetoothDevice>?) {
-                        Log.e("test", "scanDeviceNotify${p0}")
+                object : IResultCallback {
+                    override fun success() {
+                        Log.e("test", "scan success")
+                        materialDialog?.dismiss()
                     }
 
-                    override fun scanTimeOutResult(deviceHashMap: HashMap<String, ExtendedBluetoothDevice>) {
-                        Log.e("test", "scanTimeOutResult${deviceHashMap}")
-                        // todo 找信号最强的连接
-                        for (value in deviceHashMap.values) {
-                            LeHomeSdk.getBleSigMeshManger()
-                                .startConnectProxyNode(value, object : IResultCallback {
-                                    override fun success() {
-                                    }
-
-                                    override fun fail(p0: Int, p1: String?) {
-                                        materialDialog?.dismiss()
-                                        Log.e("test", "" + p1)
-                                    }
-
-                                })
-                            break
-                        }
-                    }
-
-                    override fun scanFail(p0: String?) {
-                        Log.e("test", "scanFail $p0")
+                    override fun fail(p0: Int, p1: String?) {
+                        Log.e("test", "scanFail $p0 $p1")
+                        materialDialog?.dismiss()
                     }
 
                 })
