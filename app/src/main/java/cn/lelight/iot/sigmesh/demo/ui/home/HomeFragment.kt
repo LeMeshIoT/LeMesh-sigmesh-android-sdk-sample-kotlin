@@ -49,8 +49,10 @@ class HomeFragment : Fragment() {
             materialDialog?.dismiss()
         }
 
-        binding.textHome.text =
-            "ver:${LeHomeSdk.getBleSigMeshManger().version}\n${BuildConfig.BUILDTIME}"
+        if (LeHomeSdk.getBleSigMeshManger() != null) {
+            binding.textHome.text =
+                "ver:${LeHomeSdk.getBleSigMeshManger().version}\n${BuildConfig.BUILDTIME}"
+        }
 
         binding.btnConfigTtl.setOnClickListener {
             MaterialDialog.Builder(requireActivity())

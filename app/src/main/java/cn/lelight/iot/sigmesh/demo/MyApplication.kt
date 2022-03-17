@@ -50,6 +50,9 @@ class MyApplication : Application() {
                     // 检查是否设备有网络
                     "授权失败"
                 }
+                InitCallback.NEED_APPID,InitCallback.NEED_MAC,InitCallback.NEED_SECRET -> {
+                    "请填写授权码"
+                }
                 else -> {
                     "其它异常:$result"
                 }
