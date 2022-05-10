@@ -55,6 +55,11 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnConfigTtl.setOnClickListener {
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
+            //
             MaterialDialog.Builder(requireActivity())
                 .title("设置ttl")
                 .content("消息转发次数,默认7,范围1~127")

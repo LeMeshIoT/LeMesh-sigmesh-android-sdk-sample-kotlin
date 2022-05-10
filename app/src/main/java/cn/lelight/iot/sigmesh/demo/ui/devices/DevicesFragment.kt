@@ -29,13 +29,14 @@ import cn.lelight.leiot.sdk.api.IDataManger
 import cn.lelight.leiot.sdk.api.IGroupManger
 import cn.lelight.leiot.sdk.api.IRoomManger
 import cn.lelight.leiot.sdk.api.callback.ICreateCallback
-import cn.lelight.leiot.sdk.api.callback.data.IHomeDataChangeListener
+import cn.lelight.leiot.sdk.api.callback.data.IDevDataListener
 import cn.lelight.leiot.sdk.api.callback.data.IHomeRoomGroupChangeListener
 import cn.lelight.leiot.sdk.utils.LeLogUtil
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.material.tabs.TabLayout
 
-class DevicesFragment : Fragment() {
+class DevicesFragment : Fragment(), IHomeRoomGroupChangeListener,
+    IDevDataListener {
 
     private val TAG = "DevicesFragment"
 
@@ -100,6 +101,8 @@ class DevicesFragment : Fragment() {
 
         // 所有设备的点击事件
         binding.tvAllRoomDevices.setOnClickListener {
+
+
             if (targetRoomId == -1) {
                 initRoomData(allRoomBeans[0])
             } else {
@@ -115,6 +118,11 @@ class DevicesFragment : Fragment() {
         }
 
         binding.btnAddRoom.setOnClickListener {
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
+
             MaterialDialog.Builder(requireActivity())
                 .title("输入房间名字")
                 .input("", "", false) { dialog, input -> //
@@ -137,6 +145,11 @@ class DevicesFragment : Fragment() {
         }
 
         binding.btnAddGroup.setOnClickListener {
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
+
             if (targetRoomId == -1) {
                 Toast.makeText(requireActivity(), "请在房间中添加群组", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -171,15 +184,30 @@ class DevicesFragment : Fragment() {
         }
 
         binding.btnOpenAll.setOnClickListener {
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
+
             turnOnOff(true)
         }
 
         binding.btnCloesAll.setOnClickListener {
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
+            //
             turnOnOff(false)
         }
 
         //
         binding.btnAddDeviceToGroup.setOnClickListener {
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
+            //
             if (targetRoomId == -1) {
                 Toast.makeText(requireContext(), "请在房间中添加", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -200,6 +228,11 @@ class DevicesFragment : Fragment() {
 
         //
         binding.btnDelDeviceToGroup.setOnClickListener {
+            if (!checkIsInitSdk()) {
+                toast("未初始化")
+                return@setOnClickListener
+            }
+            //
             if (targetRoomId == -1) {
                 Toast.makeText(requireContext(), "请在房间中删除", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -257,46 +290,8 @@ class DevicesFragment : Fragment() {
     private fun initListener() {
         Log.i(TAG, "initListener")
         // 监听blemesh
-        LeHomeSdk.getInstance().setHomeDataChangeListener(object : IHomeDataChangeListener {
-            override fun onDeviceAdd(deviceBean: DeviceBean) {
-                deviceUpdateUI()
-            }
-
-            override fun onDeviceUpdate(deviceBean: DeviceBean) {
-                deviceUpdateUI()
-            }
-
-            override fun onDeviceDeleted(deviceBean: DeviceBean) {
-                deviceUpdateUI()
-            }
-        })
-        //
-        LeHomeSdk.getInstance()
-            .setHomeRoomGroupChangeListener(object : IHomeRoomGroupChangeListener {
-                override fun onRoomBeanAdd(roomBean: RoomBean) {
-                    updateRoomInfo()
-                }
-
-                override fun onRoomBeanUpdate(roomBean: RoomBean) {
-                    updateRoomInfo()
-                }
-
-                override fun onRoomBeanDeleted(roomBean: RoomBean) {
-                    updateRoomInfo()
-                }
-
-                override fun onGroupBeanAdd(groupBean: GroupBean) {
-                    updateRoomInfo()
-                }
-
-                override fun onGroupBeanUpdate(groupBean: GroupBean) {
-                    updateRoomInfo()
-                }
-
-                override fun onGroupBeanDeleted(groupBean: GroupBean) {
-                    updateRoomInfo()
-                }
-            })
+        LeHomeSdk.getInstance().registerDevDataChangeListener(this)
+        LeHomeSdk.getInstance().registerHomeRoomGroupChangeListener(this)
     }
 
     private fun deviceUpdateUI() {
@@ -499,8 +494,65 @@ class DevicesFragment : Fragment() {
             }.show()
     }
 
+    fun toast(msg: String) {
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun checkIsInitSdk(): Boolean {
+        if (requireActivity() is MainActivity) {
+            return SigDemoInstance.get().isInit.value!!
+        }
+        return false
+    }
+
     override fun onDestroyView() {
+        LeHomeSdk.getInstance().unRegisterDevDataChangeListener(this)
+        LeHomeSdk.getInstance().unRegisterHomeRoomGroupChangeListener(this)
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onRoomBeanAdd(roomBean: RoomBean) {
+        updateRoomInfo()
+    }
+
+    override fun onRoomBeanUpdate(roomBean: RoomBean) {
+        updateRoomInfo()
+    }
+
+    override fun onRoomBeanDeleted(roomBean: RoomBean) {
+        updateRoomInfo()
+    }
+
+    override fun onGroupBeanAdd(groupBean: GroupBean) {
+        updateRoomInfo()
+    }
+
+    override fun onGroupBeanUpdate(groupBean: GroupBean) {
+        updateRoomInfo()
+    }
+
+    override fun onGroupBeanDeleted(groupBean: GroupBean) {
+        updateRoomInfo()
+    }
+
+    override fun onDeviceAdd(p0: String?) {
+        deviceUpdateUI()
+    }
+
+    override fun onStatusChanged(p0: String?, p1: Boolean) {
+        deviceUpdateUI()
+    }
+
+    override fun onDpUpdate(p0: String?, p1: Int, p2: Int, p3: Any?) {
+    }
+
+    override fun onDevInfoUpdate(p0: String?) {
+        deviceUpdateUI()
+    }
+
+    override fun onRemoved(p0: String?) {
+        deviceUpdateUI()
+    }
+
 }

@@ -4,16 +4,16 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="home" />
+        android:title="首页" />
 
     <item
         android:id="@+id/navigation_device"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="device" />
+        android:title="设备" />
 
     <item
         android:id="@+id/navigation_scene"
         android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="scene" />
+        android:title="情景" />
 
 </menu>

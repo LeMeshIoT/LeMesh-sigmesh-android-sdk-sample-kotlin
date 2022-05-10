@@ -24,6 +24,105 @@
         android:layout_marginTop="4dp"
         android:textSize="14sp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="#e5e5e5"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="相关设置" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TTL(控制指令转发次数)" />
+
+
+            <Button
+                android:id="@+id/btn_config_ttl"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="设置" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="灯光渐变时间" />
+
+
+            <Button
+                android:id="@+id/btn_config_time"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="设置" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="执行情景的灯光渐变时间" />
+
+
+            <Button
+                android:id="@+id/btn_config_scene_time"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="设置" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="设置SEQ(控制端的消息下标)" />
+
+
+            <Button
+                android:id="@+id/btn_config_seq"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="设置" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/btn_add_device"
         android:layout_width="match_parent"
@@ -38,33 +137,6 @@
         android:layout_marginTop="8dp"
         android:text="搜索附近最近设备连接" />
 
-    <Button
-        android:id="@+id/btn_config_ttl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="设置ttl" />
-
-    <Button
-        android:id="@+id/btn_config_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="设置灯光渐变时间" />
-
-    <Button
-        android:id="@+id/btn_config_scene_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="设置情景渐变时间" />
-
-    <Button
-        android:id="@+id/btn_config_seq"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="设置SEQ" />
 
     <Button
         android:id="@+id/btn_config_reset"

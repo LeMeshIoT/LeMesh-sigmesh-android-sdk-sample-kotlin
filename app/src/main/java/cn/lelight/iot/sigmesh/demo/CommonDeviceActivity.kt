@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.InputType
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import cn.lelight.iot.sigmesh.demo.databinding.ActivityCommonDeviceBinding
@@ -18,10 +19,11 @@ import cn.lelight.leiot.sdk.LeHomeSdk
 import cn.lelight.leiot.sdk.adapter.CommonAdapter
 import cn.lelight.leiot.sdk.adapter.ViewHolder
 import cn.lelight.leiot.sdk.api.callback.IControlCallback
+import cn.lelight.leiot.sdk.api.callback.data.IDevDataListener
 import cn.lelight.leiot.sdk.api.callback.data.IHomeDataChangeListener
 import com.afollestad.materialdialogs.MaterialDialog
 
-class CommonDeviceActivity : AppCompatActivity() {
+class CommonDeviceActivity : AppCompatActivity(), IDevDataListener {
 
     private var dps: ArrayList<DpPackageBean> = ArrayList()
     private var targetBean: DeviceBean? = null
@@ -57,21 +59,7 @@ class CommonDeviceActivity : AppCompatActivity() {
         //
         initData()
 
-        LeHomeSdk.getInstance().setHomeDataChangeListener(object : IHomeDataChangeListener {
-            override fun onDeviceAdd(deviceBean: DeviceBean) {
-//                initData();
-            }
-
-            override fun onDeviceUpdate(deviceBean: DeviceBean) {
-                if (dpAdapter != null) {
-                    dpAdapter!!.notifyDataSetChanged()
-                }
-            }
-
-            override fun onDeviceDeleted(deviceBean: DeviceBean) {
-//                initData();
-            }
-        })
+        LeHomeSdk.getInstance().registerDevDataChangeListener(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -150,6 +138,11 @@ class CommonDeviceActivity : AppCompatActivity() {
                 } else if (dpPackageBean.type == DpType.STR.type) {
                     showInputStrDialog(dpPackageBean)
                 }
+            }
+            //
+            holder.getView<Button>(R.id.btn_query).setOnClickListener {
+                targetBean!!.queryDp(DpBean(dpPackageBean.id, dpPackageBean.type, null))
+                Toast.makeText(mContext, "已发送", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -262,5 +255,28 @@ class CommonDeviceActivity : AppCompatActivity() {
                     ", name='" + name + '\'' +
                     '}'
         }
+    }
+
+    override fun onDeviceAdd(p0: String?) {
+    }
+
+    override fun onStatusChanged(p0: String?, p1: Boolean) {
+    }
+
+    override fun onDpUpdate(p0: String?, p1: Int, p2: Int, p3: Any?) {
+    }
+
+    override fun onDevInfoUpdate(p0: String?) {
+        if (dpAdapter != null) {
+            dpAdapter!!.notifyDataSetChanged()
+        }
+    }
+
+    override fun onRemoved(p0: String?) {
+    }
+
+    override fun onDestroy() {
+        LeHomeSdk.getInstance().unRegisterDevDataChangeListener(this)
+        super.onDestroy()
     }
 }

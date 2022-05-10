@@ -60,9 +60,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     //
     // sdk组件
-    implementation 'cn.lelight.leiot.sdk:smart:0.0.7'
+    implementation 'cn.lelight.leiot.sdk:smart:0.1.0'
     // blesigmesh模块(可选)
-    implementation 'cn.lelight.leiot.sdk:blesigmesh:0.0.7'
+    implementation 'cn.lelight.leiot.sdk:blesigmesh:0.1.0'
     // 版本0.0.6及以上第三方库需要外部单独调用
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

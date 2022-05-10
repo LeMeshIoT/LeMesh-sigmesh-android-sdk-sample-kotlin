@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">SigMesh-Demo</string>
-    <string name="title_home">Home</string>
-    <string name="title_device">Device</string>
-    <string name="title_Scene">Scene</string>
+    <string name="title_home">首页</string>
+    <string name="title_device">设备</string>
+    <string name="title_Scene">情景</string>
     <string name="title_activity_add_devices">AddDevicesActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
