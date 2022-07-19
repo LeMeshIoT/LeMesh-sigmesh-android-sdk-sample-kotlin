@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import cn.lelight.iot.sigmesh.demo.MainActivity
@@ -45,7 +46,7 @@ class SceneFragment : Fragment() {
         val root: View = binding.root
 
         binding.btnQueryScene2.setOnClickListener {
-            if (!SigDemoInstance.get().isInit.value!!){
+            if (!SigDemoInstance.get().isInit.value!!) {
                 return@setOnClickListener
             }
 
@@ -54,7 +55,7 @@ class SceneFragment : Fragment() {
 
         binding.btnAddScene.setOnClickListener {
 
-            if (!SigDemoInstance.get().isInit.value!!){
+            if (!SigDemoInstance.get().isInit.value!!) {
                 return@setOnClickListener
             }
 
@@ -125,7 +126,11 @@ class SceneFragment : Fragment() {
                 allSigScenes
             )
         )
+    }
 
+    override fun onDestroy() {
+        sigSceneManger!!.setStatusCallback(null)
+        super.onDestroy()
     }
 
     inner class SceneAdapter(context: Context?, datas: List<SceneBean>) :
@@ -141,15 +146,25 @@ class SceneFragment : Fragment() {
             //
             holder.getTextView(R.id.tv_scene_action).setOnClickListener {
                 sigSceneManger?.loadScene(sceneBean, object : IResultCallback {
-                    override fun success() {}
-                    override fun fail(code: Int, msg: String) {}
+                    override fun success() {
+                        Toast.makeText(requireActivity(), "执行成功", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun fail(code: Int, msg: String) {
+                        Toast.makeText(requireActivity(), "执行失败:" + msg, Toast.LENGTH_SHORT).show()
+                    }
                 })
             }
             //
             holder.getTextView(R.id.tv_scene_del).setOnClickListener {
                 sigSceneManger?.deleteScene(sceneBean, object : IResultCallback {
-                    override fun success() {}
-                    override fun fail(code: Int, msg: String) {}
+                    override fun success() {
+                        Toast.makeText(requireActivity(), "删除成功", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun fail(code: Int, msg: String) {
+                        Toast.makeText(requireActivity(), "删除失败:" + msg, Toast.LENGTH_SHORT).show()
+                    }
                 })
             }
         }

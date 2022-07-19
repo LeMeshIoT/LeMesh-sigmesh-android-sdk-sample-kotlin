@@ -20,7 +20,6 @@ import cn.lelight.leiot.sdk.adapter.CommonAdapter
 import cn.lelight.leiot.sdk.adapter.ViewHolder
 import cn.lelight.leiot.sdk.api.callback.IControlCallback
 import cn.lelight.leiot.sdk.api.callback.data.IDevDataListener
-import cn.lelight.leiot.sdk.api.callback.data.IHomeDataChangeListener
 import com.afollestad.materialdialogs.MaterialDialog
 
 class CommonDeviceActivity : AppCompatActivity(), IDevDataListener {
@@ -78,6 +77,8 @@ class CommonDeviceActivity : AppCompatActivity(), IDevDataListener {
                 dpPackageBean.id = value.dpId
                 dpPackageBean.type = value.type
                 dpPackageBean.name = value.getName()
+                dpPackageBean.mode = value.mode
+                dpPackageBean.obj = value.desc
                 //
                 dps.add(dpPackageBean)
             }
@@ -88,6 +89,8 @@ class CommonDeviceActivity : AppCompatActivity(), IDevDataListener {
                 dpPackageBean.id = value.dpId
                 dpPackageBean.type = value.type
                 dpPackageBean.name = value.getName()
+                dpPackageBean.mode = value.mode
+                dpPackageBean.obj = value.desc
                 //
                 dps.add(dpPackageBean)
             }
@@ -98,6 +101,7 @@ class CommonDeviceActivity : AppCompatActivity(), IDevDataListener {
                 dpPackageBean.id = value.dpId
                 dpPackageBean.type = value.type
                 dpPackageBean.name = value.getName()
+                dpPackageBean.mode = value.mode
                 //
                 dps.add(dpPackageBean)
             }
@@ -128,16 +132,35 @@ class CommonDeviceActivity : AppCompatActivity(), IDevDataListener {
             } else {
                 holder.getTextView(R.id.tv_dp_value).text = "无"
             }
+
+            //
+            if (dpPackageBean.mode == "rw") {
+                holder.getTextView(R.id.tv_dp_mode).text = "下发&上报"
+            } else if (dpPackageBean.mode == "ro") {
+                holder.getTextView(R.id.tv_dp_mode).text = "上报"
+            } else if (dpPackageBean.mode == "wr") {
+                holder.getTextView(R.id.tv_dp_mode).text = "下发"
+            }
+
             holder.getTextView(R.id.tv_dp_name).text = dpPackageBean.name
             //
             holder.getmConverView().setOnClickListener {
-                if (dpPackageBean.type == DpType.BOOL.type) {
-                    showBoolDialog(dpPackageBean)
-                } else if (dpPackageBean.type == DpType.VALUE.type) {
-                    showInputValueDialog(dpPackageBean)
-                } else if (dpPackageBean.type == DpType.STR.type) {
-                    showInputStrDialog(dpPackageBean)
+                if (dpPackageBean.mode == "ro") {
+                    // 仅上报
+                } else {
+                    if (dpPackageBean.type == DpType.BOOL.type) {
+                        showBoolDialog(dpPackageBean)
+                    } else if (dpPackageBean.type == DpType.VALUE.type) {
+                        showInputValueDialog(dpPackageBean)
+                    } else if (dpPackageBean.type == DpType.STR.type) {
+                        showInputStrDialog(dpPackageBean)
+                    } else if (dpPackageBean.type == DpType.ENUM.type) {
+                        if (dpPackageBean.obj is Array<*>) {
+                            showSelectEnumDialog(dpPackageBean)
+                        }
+                    }
                 }
+
             }
             //
             holder.getView<Button>(R.id.btn_query).setOnClickListener {
@@ -145,6 +168,32 @@ class CommonDeviceActivity : AppCompatActivity(), IDevDataListener {
                 Toast.makeText(mContext, "已发送", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun showSelectEnumDialog(dpPackageBean: DpPackageBean) {
+        //
+        MaterialDialog.Builder(this)
+            .title(dpPackageBean.name!!)
+            .items(*(dpPackageBean.obj as Array<String?>?)!!)
+            .itemsCallback { dialog, itemView, position, text ->
+                targetBean!!.sendDp(DpBean(dpPackageBean.id, dpPackageBean.type, text.toString()),
+                    object : IControlCallback {
+                        override fun onSuccess() {
+                            Toast.makeText(this@CommonDeviceActivity, "发送成功", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        override fun onFail(code: Int, msg: String) {
+                            Toast.makeText(
+                                this@CommonDeviceActivity,
+                                "发送失败:$msg",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+                    })
+            }
+            .show()
     }
 
     private fun showInputValueDialog(dpPackageBean: DpPackageBean) {
@@ -248,6 +297,9 @@ class CommonDeviceActivity : AppCompatActivity(), IDevDataListener {
         var id = 0
         var type = 0
         var name: String? = null
+        var mode: String? = null
+        var obj: Any? = null
+
         override fun toString(): String {
             return "DpPackageBean{" +
                     "id=" + id +
